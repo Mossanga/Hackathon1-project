@@ -96,16 +96,12 @@
       </div>
     </div>
   </div>
-
-  <!-- Footer -->
-  <Footer />
 </template>
 
 <script setup>
 import { ref, computed, onMounted } from 'vue';
 import { useStore } from 'vuex';
 import NewsCard from '../components/NewsCard.vue';
-import Footer from '../components/Footer.vue';
 import bm24Logo from '@/assets/image/BM24.jpg';
 
 // Vuex store
@@ -176,11 +172,14 @@ onMounted(async () => {
 /* Typography and Spacing */
 .container {
   padding: 0 15px;
+  background: rgba(255, 255, 255, 0.95); /* Semi-transparent white for content contrast */
+  border-radius: 10px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
 .section-title {
   font-size: 2rem;
   font-weight: 700;
-  color: #28A745; /* BM24 green */
+  color: #28A745;
   margin-bottom: 1.5rem;
 }
 
@@ -200,7 +199,7 @@ onMounted(async () => {
 .carousel-img {
   height: 400px;
   object-fit: cover;
-  filter: brightness(80%); /* Slightly darken for caption contrast */
+  filter: brightness(80%);
   transition: filter 0.3s ease;
 }
 .carousel-item:hover .carousel-img {
@@ -235,7 +234,7 @@ onMounted(async () => {
   transition: box-shadow 0.3s ease;
 }
 .search-bar:focus {
-  box-shadow: 0 4px 12px rgba(40, 167, 69, 0.3); /* Green glow */
+  box-shadow: 0 4px 12px rgba(40, 167, 69, 0.3);
   outline: none;
 }
 

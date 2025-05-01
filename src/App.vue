@@ -1,6 +1,6 @@
 <template>
   <div id="app">
-    <!-- Navbar (assuming it's already global) -->
+    <!-- Navbar -->
     <NavBar />
     <!-- Page Content -->
     <router-view />

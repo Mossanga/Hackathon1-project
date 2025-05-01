@@ -1,12 +1,12 @@
 <template>
-  <div class="container my-5">
+  <div class="container my-5 animate-section">
     <!-- BM24 Logo -->
-    <!-- <div class="text-center mb-4">
+    <div class="text-center mb-5">
       <img :src="bm24Logo" alt="BM24 Logo" class="bm24-logo" />
-    </div> -->
+    </div>
 
     <!-- Carousel -->
-    <div id="newsCarousel" class="carousel slide mb-4" data-bs-ride="carousel" data-bs-interval="5000">
+    <div id="newsCarousel" class="carousel slide mb-5" data-bs-ride="carousel" data-bs-interval="5000">
       <div class="carousel-indicators">
         <button
           v-for="(slide, index) in carouselSlides"
@@ -57,20 +57,20 @@
     </div>
 
     <!-- Search Bar -->
-    <div class="mb-4">
+    <div class="mb-5 search-bar-container">
       <input
         v-model="searchQuery"
         type="text"
-        class="form-control"
+        class="form-control search-bar"
         placeholder="Search bm24 news..."
         @input="filterNews"
       />
     </div>
 
     <!-- Headline News -->
-    <div v-if="headlineNews" class="mb-5">
-      <h2>Headline News</h2>
-      <div class="card">
+    <div v-if="headlineNews" class="mb-5 animate-section">
+      <h2 class="section-title">Headline News</h2>
+      <div class="card shadow-sm">
         <img :src="headlineNews.image_url" class="card-img-top" :alt="headlineNews.title" />
         <div class="card-body">
           <h3 class="card-title">{{ headlineNews.title }}</h3>
@@ -81,13 +81,13 @@
     </div>
 
     <!-- All News -->
-    <h2>All News</h2>
+    <h2 class="section-title">All News</h2>
     <div v-if="loading" class="text-center">
       <div class="spinner-border" role="status">
         <span class="visually-hidden">Loading...</span>
       </div>
     </div>
-    <div v-else class="row">
+    <div v-else class="row animate-section">
       <div v-for="news in filteredNews" :key="news.uuid" class="col-md-4 mb-4">
         <NewsCard :news="news" />
       </div>
@@ -96,12 +96,16 @@
       </div>
     </div>
   </div>
+
+  <!-- Footer -->
+  <Footer />
 </template>
 
 <script setup>
 import { ref, computed, onMounted } from 'vue';
 import { useStore } from 'vuex';
 import NewsCard from '../components/NewsCard.vue';
+import Footer from '../components/Footer.vue';
 import bm24Logo from '@/assets/image/BM24.jpg';
 
 // Vuex store
@@ -120,7 +124,6 @@ const headlineNews = computed(() => store.getters.headlineNews);
 const carouselSlides = computed(() => {
   const slides = [];
   if (allNews.value && allNews.value.length > 0) {
-    // Use up to 3 news items
     for (let i = 0; i < Math.min(3, allNews.value.length); i++) {
       slides.push({
         image: allNews.value[i].image_url || 'https://via.placeholder.com/800x400?text=News+Image',
@@ -129,7 +132,6 @@ const carouselSlides = computed(() => {
       });
     }
   } else {
-    // Fallback placeholder slides
     slides.push(
       {
         image: 'https://via.placeholder.com/800x400/28A745/FFFFFF?text=BM24+News+1',
@@ -165,29 +167,112 @@ onMounted(async () => {
     store.dispatch('fetchAllNews'),
     store.dispatch('fetchHeadlineNews'),
   ]);
-  filteredNews.value = allNews.value; // Initialize filteredNews
+  filteredNews.value = allNews.value;
   loading.value = false;
 });
 </script>
 
 <style scoped>
-.card-img-top {
-  height: 300px;
-  object-fit: cover;
+/* Typography and Spacing */
+.container {
+  padding: 0 15px;
 }
+.section-title {
+  font-size: 2rem;
+  font-weight: 700;
+  color: #28A745; /* BM24 green */
+  margin-bottom: 1.5rem;
+}
+
+/* Circular Logo */
 .bm24-logo {
   height: 100px;
   width: 100px;
   border-radius: 50%;
   object-fit: cover;
+  transition: transform 0.3s ease;
 }
+.bm24-logo:hover {
+  transform: scale(1.1);
+}
+
+/* Carousel */
 .carousel-img {
-  height: 400px; /* Adjust carousel image height */
-  object-fit: cover; /* Ensure images fit well */
+  height: 400px;
+  object-fit: cover;
+  filter: brightness(80%); /* Slightly darken for caption contrast */
+  transition: filter 0.3s ease;
+}
+.carousel-item:hover .carousel-img {
+  filter: brightness(100%);
 }
 .carousel-caption {
-  background: rgba(0, 0, 0, 0.5); /* Semi-transparent background for readability */
-  padding: 10px;
-  border-radius: 5px;
+  background: rgba(0, 0, 0, 0.7);
+  padding: 15px;
+  border-radius: 8px;
+  bottom: 20px;
+}
+.carousel-caption h5 {
+  font-size: 1.5rem;
+  font-weight: 600;
+}
+.carousel-control-prev,
+.carousel-control-next {
+  width: 5%;
+  background: rgba(0, 0, 0, 0.3);
+}
+
+/* Search Bar */
+.search-bar-container {
+  max-width: 600px;
+  margin: 0 auto;
+}
+.search-bar {
+  border: none;
+  border-radius: 25px;
+  padding: 12px 20px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  transition: box-shadow 0.3s ease;
+}
+.search-bar:focus {
+  box-shadow: 0 4px 12px rgba(40, 167, 69, 0.3); /* Green glow */
+  outline: none;
+}
+
+/* News Cards */
+.card {
+  border: none;
+  border-radius: 10px;
+  overflow: hidden;
+  transition: transform 0.3s ease;
+}
+.card:hover {
+  transform: translateY(-5px);
+}
+.card-img-top {
+  height: 200px;
+  object-fit: cover;
+}
+.card-title {
+  font-size: 1.25rem;
+  font-weight: 600;
+}
+.card-text {
+  color: #555;
+}
+
+/* Animations */
+.animate-section {
+  animation: fadeIn 1s ease-in;
+}
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 </style>

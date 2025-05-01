@@ -1,0 +1,10 @@
+body {
+    font-family: 'Poppins', sans-serif;
+    background-color: #f8f9fa;
+  }
+  a {
+    transition: color 0.3s ease;
+  }
+  a:hover {
+    color: #28A745 !important;
+  }

@@ -1,10 +1,7 @@
 <template>
   <div id="app">
-    <!-- Navbar -->
     <NavBar />
-    <!-- Page Content -->
     <router-view />
-    <!-- Global Footer -->
     <Footer />
   </div>
 </template>

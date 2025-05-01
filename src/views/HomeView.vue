@@ -2,7 +2,7 @@
   <div class="container my-5 animate-section">
     <!-- BM24 Logo -->
     <div class="text-center mb-5">
-      <img :src="bm24Logo" alt="BM24 Logo" class="bm24-logo" />
+      <img :src="BM24.jpg" alt="BM24 Logo" class="bm24-logo" />
     </div>
 
     <!-- Carousel -->
@@ -63,7 +63,7 @@
         type="text"
         class="form-control search-bar"
         placeholder="Search bm24 news..."
-        @input="filterNews"
+        @input="debouncedFilterNews"
       />
     </div>
 
@@ -91,8 +91,8 @@
       <div v-for="news in filteredNews" :key="news.uuid" class="col-md-4 mb-4">
         <NewsCard :news="news" />
       </div>
-      <div v-if="!filteredNews.length" class="col-12">
-        <p>No news found.</p>
+      <div v-if="!filteredNews.length && !loading" class="col-12">
+        <p class="text-muted">No news found. Try a different search term.</p>
       </div>
     </div>
   </div>
@@ -104,6 +104,15 @@ import { useStore } from 'vuex';
 import NewsCard from '../components/NewsCard.vue';
 import bm24Logo from '@/assets/image/BM24.jpg';
 
+// Custom debounce function
+const debounce = (func, wait) => {
+  let timeout;
+  return (...args) => {
+    clearTimeout(timeout);
+    timeout = setTimeout(() => func(...args), wait);
+  };
+};
+
 // Vuex store
 const store = useStore();
 
@@ -113,58 +122,93 @@ const searchQuery = ref('');
 const filteredNews = ref([]);
 
 // Computed properties (getters)
-const allNews = computed(() => store.getters.allNews);
+const allNews = computed(() => {
+  const news = store.getters.allNews || [];
+  console.log('Computed allNews:', news); // Debug
+  return news;
+});
 const headlineNews = computed(() => store.getters.headlineNews);
+
+// Fallback placeholder news
+const placeholderNews = [
+  {
+    uuid: '1',
+    title: 'Sample News 1',
+    description: 'This is a sample news article for testing.',
+    image_url: 'https://via.placeholder.com/800x400/28A745/FFFFFF?text=Sample+News+1',
+  },
+  {
+    uuid: '2',
+    title: 'Sample News 2',
+    description: 'Another sample news article for testing search.',
+    image_url: 'https://via.placeholder.com/800x400/28A745/FFFFFF?text=Sample+News+2',
+  },
+  {
+    uuid: '3',
+    title: 'Sample News 3',
+    description: 'Testing the search functionality with this article.',
+    image_url: 'https://via.placeholder.com/800x400/28A745/FFFFFF?text=Sample+News+3',
+  },
+];
 
 // Carousel slides
 const carouselSlides = computed(() => {
   const slides = [];
-  if (allNews.value && allNews.value.length > 0) {
-    for (let i = 0; i < Math.min(3, allNews.value.length); i++) {
-      slides.push({
-        image: allNews.value[i].image_url || 'https://via.placeholder.com/800x400?text=News+Image',
-        title: allNews.value[i].title || 'News Title',
-        uuid: allNews.value[i].uuid,
-      });
-    }
-  } else {
-    slides.push(
-      {
-        image: 'https://via.placeholder.com/800x400/28A745/FFFFFF?text=BM24+News+1',
-        title: 'Welcome to BM24',
-      },
-      {
-        image: 'https://via.placeholder.com/800x400/28A745/FFFFFF?text=BM24+News+2',
-        title: 'Stay Updated',
-      },
-      {
-        image: 'https://via.placeholder.com/800x400/28A745/FFFFFF?text=BM24+News+3',
-        title: 'Breaking News',
-      }
-    );
+  const newsSource = allNews.value && allNews.value.length > 0 ? allNews.value : placeholderNews;
+  for (let i = 0; i < Math.min(3, newsSource.length); i++) {
+    slides.push({
+      image: newsSource[i].image_url || 'https://via.placeholder.com/800x400?text=News+Image',
+      title: newsSource[i].title || 'News Title',
+      uuid: newsSource[i].uuid,
+    });
   }
   return slides;
 });
 
-// Methods
+// Debounced filterNews function
 const filterNews = () => {
-  const query = searchQuery.value.toLowerCase();
-  filteredNews.value = allNews.value.filter(
-    (news) =>
-      news.title.toLowerCase().includes(query) ||
-      news.description.toLowerCase().includes(query)
-  );
+  try {
+    console.log('Search query:', searchQuery.value); // Debug
+    const query = searchQuery.value.trim().toLowerCase();
+    const newsSource = allNews.value && allNews.value.length > 0 ? allNews.value : placeholderNews;
+    if (!query) {
+      filteredNews.value = newsSource;
+      console.log('No query, showing all news:', filteredNews.value); // Debug
+      return;
+    }
+    filteredNews.value = newsSource.filter((news) => {
+      const title = news.title ? String(news.title).toLowerCase() : '';
+      const description = news.description ? String(news.description).toLowerCase() : '';
+      const matches = title.includes(query) || description.includes(query);
+      console.log(`News "${title}" matches "${query}":`, matches); // Debug
+      return matches;
+    });
+    console.log('Filtered news:', filteredNews.value); // Debug
+  } catch (error) {
+    console.error('Error filtering news:', error);
+    filteredNews.value = [];
+  }
 };
+
+const debouncedFilterNews = debounce(filterNews, 300);
 
 // Fetch data on mount
 onMounted(async () => {
   loading.value = true;
-  await Promise.all([
-    store.dispatch('fetchAllNews'),
-    store.dispatch('fetchHeadlineNews'),
-  ]);
-  filteredNews.value = allNews.value;
-  loading.value = false;
+  try {
+    console.log('Fetching news...'); // Debug
+    await Promise.all([
+      store.dispatch('fetchAllNews'),
+      store.dispatch('fetchHeadlineNews'),
+    ]);
+    filteredNews.value = allNews.value && allNews.value.length > 0 ? allNews.value : placeholderNews;
+    console.log('Initial filteredNews:', filteredNews.value); // Debug
+  } catch (error) {
+    console.error('Error fetching news:', error);
+    filteredNews.value = placeholderNews; // Fallback to placeholder
+  } finally {
+    loading.value = false;
+  }
 });
 </script>
 
@@ -172,7 +216,7 @@ onMounted(async () => {
 /* Typography and Spacing */
 .container {
   padding: 0 15px;
-  background: rgba(255, 255, 255, 0.95); /* Semi-transparent white for content contrast */
+  background: rgba(255, 255, 255, 0.95);
   border-radius: 10px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 }

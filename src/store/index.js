@@ -1,6 +1,7 @@
 import { createStore } from 'vuex';
 import axios from 'axios';
 
+
 const API_BASE_URL = 'https://alvahtek.com/projects/ota/api/news-api/';
 
 export default createStore({

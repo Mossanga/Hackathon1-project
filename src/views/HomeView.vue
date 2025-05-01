@@ -2,7 +2,7 @@
   <div class="container my-5 animate-section">
     <!-- BM24 Logo -->
     <div class="text-center mb-5">
-      <img :src="BM24.jpg" alt="BM24 Logo" class="bm24-logo" />
+      <img :src="bm24Logo" alt="BM24 Logo" class="bm24-logo" />
     </div>
 
     <!-- Carousel -->
@@ -58,13 +58,17 @@
 
     <!-- Search Bar -->
     <div class="mb-5 search-bar-container">
-      <input
-        v-model="searchQuery"
-        type="text"
-        class="form-control search-bar"
-        placeholder="Search bm24 news..."
-        @input="debouncedFilterNews"
-      />
+      <form @submit.prevent="filterNews" class="d-flex">
+        <input
+          v-model="searchQuery"
+          type="text"
+          class="form-control search-bar me-2"
+          placeholder="Search bm24 news..."
+          @keypress.enter="filterNews"
+        />
+        <button type="submit" class="btn btn-primary me-2">Search</button>
+        <button type="button" class="btn btn-secondary" @click="clearSearch">Clear</button>
+      </form>
     </div>
 
     <!-- Headline News -->
@@ -103,15 +107,6 @@ import { ref, computed, onMounted } from 'vue';
 import { useStore } from 'vuex';
 import NewsCard from '../components/NewsCard.vue';
 import bm24Logo from '@/assets/image/BM24.jpg';
-
-// Custom debounce function
-const debounce = (func, wait) => {
-  let timeout;
-  return (...args) => {
-    clearTimeout(timeout);
-    timeout = setTimeout(() => func(...args), wait);
-  };
-};
 
 // Vuex store
 const store = useStore();
@@ -165,10 +160,10 @@ const carouselSlides = computed(() => {
   return slides;
 });
 
-// Debounced filterNews function
+// Filter news function
 const filterNews = () => {
   try {
-    console.log('Search query:', searchQuery.value); // Debug
+    console.log('Search triggered with query:', searchQuery.value); // Debug
     const query = searchQuery.value.trim().toLowerCase();
     const newsSource = allNews.value && allNews.value.length > 0 ? allNews.value : placeholderNews;
     if (!query) {
@@ -190,7 +185,13 @@ const filterNews = () => {
   }
 };
 
-const debouncedFilterNews = debounce(filterNews, 300);
+// Clear search function
+const clearSearch = () => {
+  searchQuery.value = '';
+  const newsSource = allNews.value && allNews.value.length > 0 ? allNews.value : placeholderNews;
+  filteredNews.value = newsSource;
+  console.log('Search cleared, showing all news:', filteredNews.value); // Debug
+};
 
 // Fetch data on mount
 onMounted(async () => {

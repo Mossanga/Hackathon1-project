@@ -1,9 +1,10 @@
+
 <template>
-  <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+  <nav class="navbar navbar-expand-lg navbar-dark navbar-custom sticky-top">
     <div class="container-fluid">
-      <router-link class="navbar-brand d-flex align-items-center" to="/">
-        <img src="@/assets/image/BM24.jpg" alt="bm24 Logo" class="bm24-logo me-2 rounded-circle" />
-        <span>BM24</span>
+      <router-link class="navbar-brand" to="/">
+        <img src="@/assets/image/BM24.jpg" alt="BM24 Logo" class="navbar-logo" />
+        BM24
       </router-link>
       <button
         class="navbar-toggler"
@@ -19,33 +20,29 @@
       <div class="collapse navbar-collapse" id="navbarNav">
         <ul class="navbar-nav ms-auto">
           <li class="nav-item">
-            <router-link class="nav-link" to="/">Home</router-link>
-          </li>
-          <li class="nav-item dropdown">
-            <a
-              class="nav-link dropdown-toggle"
-              href="#"
-              id="categoryDropdown"
-              role="button"
-              data-bs-toggle="dropdown"
-              aria-expanded="false"
-            >
-              Category
-            </a>
-            <ul class="dropdown-menu" aria-labelledby="categoryDropdown">
-              <li>
-                <router-link class="dropdown-item" to="/category/business">Business</router-link>
-              </li>
-              <li>
-                <router-link class="dropdown-item" to="/category/technology">Technology</router-link>
-              </li>
-            </ul>
+            <router-link class="nav-link" to="/">
+              <font-awesome-icon :icon="['fas', 'home']" class="me-1 nav-icon" /> Home
+            </router-link>
           </li>
           <li class="nav-item">
-            <router-link class="nav-link" to="/about">About Us</router-link>
+            <router-link class="nav-link" to="/about">
+              <font-awesome-icon :icon="['fas', 'info-circle']" class="me-1 nav-icon" /> About Us
+            </router-link>
           </li>
           <li class="nav-item">
-            <router-link class="nav-link" to="/contact">Contact Us</router-link>
+            <router-link class="nav-link" to="/contact">
+              <font-awesome-icon :icon="['fas', 'envelope']" class="me-1 nav-icon" /> Contact Us
+            </router-link>
+          </li>
+          <li class="nav-item">
+            <router-link class="nav-link" to="/category/business">
+              <font-awesome-icon :icon="['fas', 'briefcase']" class="me-1 nav-icon" /> Business
+            </router-link>
+          </li>
+          <li class="nav-item">
+            <router-link class="nav-link" to="/category/technology">
+              <font-awesome-icon :icon="['fas', 'laptop-code']" class="me-1 nav-icon" /> Technology
+            </router-link>
           </li>
         </ul>
       </div>
@@ -54,16 +51,50 @@
 </template>
 
 <script setup>
-// No script logic needed
+import bm24Logo from '@/assets/image/BM24.jpg';
 </script>
 
 <style scoped>
-.bm24-logo {
-  height: 30px; /* Adjust size as needed */
-  width: auto;
+.navbar-custom {
+  background: rgba(0, 0, 0, 0.85);
+  backdrop-filter: blur(5px);
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
 }
-.navbar-brand {
-  font-size: 1.5rem; /* Adjust text size */
-  font-weight: bold;
+.navbar-logo {
+  height: 50px;
+  width: 50px;
+  border-radius: 50%;
+  margin-right: 12px;
+  transition: transform 0.3s ease;
+}
+.navbar-logo:hover {
+  transform: scale(1.1);
+}
+.nav-link {
+  color: #fff !important;
+  font-weight: 500;
+  padding: 10px 15px;
+  transition: color 0.3s ease, transform 0.3s ease;
+}
+.nav-link:hover {
+  color: #FFC107 !important;
+  transform: translateY(-2px);
+}
+.nav-icon {
+  color: #28A745;
+  transition: color 0.3s ease, transform 0.3s ease;
+}
+.nav-link:hover .nav-icon {
+  color: #FFC107;
+  transform: scale(1.2);
+}
+@media (max-width: 768px) {
+  .navbar-logo {
+    height: 40px;
+    width: 40px;
+  }
+  .nav-link {
+    padding: 8px 10px;
+  }
 }
 </style>

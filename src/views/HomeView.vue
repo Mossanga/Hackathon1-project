@@ -6,7 +6,7 @@
     </div>
 
     <!-- Carousel -->
-    <div id="newsCarousel" class="carousel slide mb-5" data-bs-ride="carousel" data-bs-interval="5000">
+    <div id="newsCarousel" class="carousel slide mb-5 carousel-custom" data-bs-ride="carousel" data-bs-interval="5000">
       <div class="carousel-indicators">
         <button
           v-for="(slide, index) in carouselSlides"
@@ -31,7 +31,7 @@
             <router-link
               v-if="slide.uuid"
               :to="`/news/${slide.uuid}`"
-              class="btn btn-primary"
+              class="btn btn-primary btn-gradient"
             >Read More</router-link>
           </div>
         </div>
@@ -58,28 +58,34 @@
 
     <!-- Search Bar -->
     <div class="mb-5 search-bar-container">
-      <form @submit.prevent="filterNews" class="d-flex">
-        <input
-          v-model="searchQuery"
-          type="text"
-          class="form-control search-bar me-2"
-          placeholder="Search bm24 news..."
-          @keypress.enter="filterNews"
-        />
-        <button type="submit" class="btn btn-primary me-2">Search</button>
-        <button type="button" class="btn btn-secondary" @click="clearSearch">Clear</button>
+      <form @submit.prevent="filterNews" class="d-flex align-items-center">
+        <div class="input-group">
+          <span class="input-group-text bg-white border-0">
+            <font-awesome-icon :icon="['fas', 'search']" />
+          </span>
+          <input
+            v-model="searchQuery"
+            type="text"
+            class="form-control search-bar"
+            placeholder="Search bm24 news..."
+            @keypress.enter="filterNews"
+          />
+        </div>
+        <button type="submit" class="btn btn-primary btn-gradient ms-2">Search</button>
+        <button type="button" class="btn btn-secondary btn-gradient ms-2" @click="clearSearch">Clear</button>
       </form>
     </div>
 
     <!-- Headline News -->
     <div v-if="headlineNews" class="mb-5 animate-section">
       <h2 class="section-title">Headline News</h2>
-      <div class="card shadow-sm">
+      <div class="card shadow-sm card-custom">
+        <div class="card-img-overlay gradient-overlay"></div>
         <img :src="headlineNews.image_url" class="card-img-top" :alt="headlineNews.title" />
         <div class="card-body">
           <h3 class="card-title">{{ headlineNews.title }}</h3>
           <p class="card-text">{{ headlineNews.description }}</p>
-          <router-link :to="`/news/${headlineNews.uuid}`" class="btn btn-primary">Read More</router-link>
+          <router-link :to="`/news/${headlineNews.uuid}`" class="btn btn-primary btn-gradient">Read More</router-link>
         </div>
       </div>
     </div>
@@ -87,13 +93,21 @@
     <!-- All News -->
     <h2 class="section-title">All News</h2>
     <div v-if="loading" class="text-center">
-      <div class="spinner-border" role="status">
+      <div class="spinner-border text-primary" role="status">
         <span class="visually-hidden">Loading...</span>
       </div>
     </div>
     <div v-else class="row animate-section">
       <div v-for="news in filteredNews" :key="news.uuid" class="col-md-4 mb-4">
-        <NewsCard :news="news" />
+        <div class="card shadow-sm card-custom">
+          <div class="card-img-overlay gradient-overlay"></div>
+          <img :src="news.image_url" class="card-img-top" :alt="news.title" />
+          <div class="card-body">
+            <h5 class="card-title">{{ news.title }}</h5>
+            <p class="card-text">{{ news.description }}</p>
+            <router-link :to="`/news/${news.uuid}`" class="btn btn-primary btn-gradient">Read More</router-link>
+          </div>
+        </div>
       </div>
       <div v-if="!filteredNews.length && !loading" class="col-12">
         <p class="text-muted">No news found. Try a different search term.</p>
@@ -105,7 +119,6 @@
 <script setup>
 import { ref, computed, onMounted } from 'vue';
 import { useStore } from 'vuex';
-import NewsCard from '../components/NewsCard.vue';
 import bm24Logo from '@/assets/image/BM24.jpg';
 
 // Vuex store
@@ -214,109 +227,178 @@ onMounted(async () => {
 </script>
 
 <style scoped>
+:root {
+  --primary-color: #28A745;
+  --secondary-color: #FFC107;
+}
+
 /* Typography and Spacing */
 .container {
-  padding: 0 15px;
-  background: rgba(255, 255, 255, 0.95);
-  border-radius: 10px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  padding: 0 20px;
+  background: rgba(255, 255, 255, 0.98);
+  border-radius: 15px;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
 }
 .section-title {
-  font-size: 2rem;
-  font-weight: 700;
-  color: #28A745;
-  margin-bottom: 1.5rem;
+  font-size: 2.5rem;
+  font-weight: 800;
+  color: var(--primary-color);
+  margin-bottom: 2rem;
+  text-transform: uppercase;
+  letter-spacing: 1px;
 }
 
 /* Circular Logo */
 .bm24-logo {
-  height: 100px;
-  width: 100px;
+  height: 120px;
+  width: 120px;
   border-radius: 50%;
   object-fit: cover;
-  transition: transform 0.3s ease;
+  border: 3px solid var(--primary-color);
+  transition: transform 0.4s ease, box-shadow 0.4s ease;
 }
 .bm24-logo:hover {
-  transform: scale(1.1);
+  transform: scale(1.15);
+  box-shadow: 0 0 20px rgba(40, 167, 69, 0.3);
 }
 
 /* Carousel */
+.carousel-custom {
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+}
 .carousel-img {
-  height: 400px;
+  height: 450px;
   object-fit: cover;
-  filter: brightness(80%);
-  transition: filter 0.3s ease;
+  transition: transform 0.5s ease;
 }
 .carousel-item:hover .carousel-img {
-  filter: brightness(100%);
+  transform: scale(1.05);
 }
 .carousel-caption {
-  background: rgba(0, 0, 0, 0.7);
-  padding: 15px;
-  border-radius: 8px;
-  bottom: 20px;
+  background: rgba(0, 0, 0, 0.75);
+  padding: 20px;
+  border-radius: 10px;
+  bottom: 30px;
 }
 .carousel-caption h5 {
-  font-size: 1.5rem;
-  font-weight: 600;
+  font-size: 1.8rem;
+  font-weight: 700;
 }
 .carousel-control-prev,
 .carousel-control-next {
-  width: 5%;
-  background: rgba(0, 0, 0, 0.3);
+  width: 8%;
+  background: rgba(0, 0, 0, 0.4);
+  transition: background 0.3s ease;
+}
+.carousel-control-prev:hover,
+.carousel-control-next:hover {
+  background: rgba(0, 0, 0, 0.6);
 }
 
 /* Search Bar */
 .search-bar-container {
-  max-width: 600px;
+  max-width: 700px;
   margin: 0 auto;
+}
+.input-group-text {
+  background: #fff;
+  border-radius: 25px 0 0 25px;
+  color: var(--primary-color);
 }
 .search-bar {
   border: none;
-  border-radius: 25px;
-  padding: 12px 20px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  transition: box-shadow 0.3s ease;
+  border-radius: 0 25px 25px 0;
+  padding: 15px 20px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  transition: box-shadow 0.3s ease, border-color 0.3s ease;
 }
 .search-bar:focus {
-  box-shadow: 0 4px 12px rgba(40, 167, 69, 0.3);
-  outline: none;
+  box-shadow: 0 6px 20px rgba(40, 167, 69, 0.3);
+  border-color: var(--primary-color);
+}
+.btn-gradient {
+  background: linear-gradient(45deg, var(--primary-color), var(--secondary-color));
+  border: none;
+  padding: 10px 20px;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+.btn-gradient:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 15px rgba(40, 167, 69, 0.4);
 }
 
 /* News Cards */
-.card {
+.card-custom {
   border: none;
-  border-radius: 10px;
+  border-radius: 15px;
   overflow: hidden;
-  transition: transform 0.3s ease;
+  position: relative;
+  transition: transform 0.4s ease, box-shadow 0.4s ease;
 }
-.card:hover {
-  transform: translateY(-5px);
+.card-custom:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
 }
 .card-img-top {
-  height: 200px;
+  height: 220px;
   object-fit: cover;
 }
+.gradient-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(to bottom, rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.6));
+  pointer-events: none;
+}
 .card-title {
-  font-size: 1.25rem;
-  font-weight: 600;
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #fff;
+  position: relative;
+  z-index: 1;
 }
 .card-text {
-  color: #555;
+  color: #ddd;
+  position: relative;
+  z-index: 1;
 }
 
 /* Animations */
 .animate-section {
-  animation: fadeIn 1s ease-in;
+  animation: fadeIn 1.2s ease-in;
 }
 @keyframes fadeIn {
   from {
     opacity: 0;
-    transform: translateY(20px);
+    transform: translateY(30px);
   }
   to {
     opacity: 1;
     transform: translateY(0);
+  }
+}
+
+/* Responsive Adjustments */
+@media (max-width: 768px) {
+  .bm24-logo {
+    height: 80px;
+    width: 80px;
+  }
+  .section-title {
+    font-size: 1.8rem;
+  }
+  .carousel-img {
+    height: 300px;
+  }
+  .search-bar {
+    padding: 12px;
+  }
+  .card-img-top {
+    height: 180px;
   }
 }
 </style>

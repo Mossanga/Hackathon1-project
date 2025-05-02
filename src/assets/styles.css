@@ -1,12 +1,18 @@
+:root {
+  --primary-color: #28A745;
+  --secondary-color: #FFC107;
+}
+
 body {
-    font-family: 'Poppins', sans-serif;
-    background: linear-gradient(135deg, rgba(40, 167, 69, 0.1) 0%, rgba(248, 249, 250, 0.9) 100%);
-    background-attachment: fixed;
-    min-height: 100vh;
-  }
-  a {
-    transition: color 0.3s ease;
-  }
-  a:hover {
-    color: #28A745 !important;
-  }
+  font-family: 'Poppins', sans-serif;
+  background: linear-gradient(135deg, rgba(40, 167, 69, 0.15), rgba(248, 249, 250, 0.95));
+  background-attachment: fixed;
+  min-height: 100vh;
+  margin: 0;
+}
+a {
+  transition: color 0.3s ease, transform 0.3s ease;
+}
+a:hover {
+  color: var(--secondary-color) !important;
+}

@@ -59,7 +59,7 @@
             />
           </div>
           <button type="button" class="btn btn-secondary btn-gradient ms-2" @click="clearSearch">
-            <font-awesome-icon :icon="['fas', 'times']" />
+            <font-awesome-icon :icon="['fas', 'times']" />Search
           </button>
         </form>
       </div>

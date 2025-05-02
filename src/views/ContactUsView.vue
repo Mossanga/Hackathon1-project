@@ -2,7 +2,7 @@
   <div class="container my-5">
     <h2 class="fw-bold text-success">Contact Us</h2>
     <p class="fst-italic fw-bold">Have questions or want to advertise with us? Fill out the form below, and we'll get back to you!</p>
-    <form action="https://formsubmit.co/0f753d4b6cada5e9236a7b1af942d7c9" method="POST" class="row g-3">
+    <form action="https://formspree.io/f/xgvkaopy" method="POST" class="row g-3">
       <input type="hidden" name="_subject" value="New Contact Form Submission - NewsApp" />
       <input type="hidden" name="_next" value="http://localhost:5173/contact" />
       <input type="hidden" name="_url" value="http://localhost:5173/contact" />

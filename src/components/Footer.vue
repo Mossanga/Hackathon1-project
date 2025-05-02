@@ -45,13 +45,13 @@
             <button type="submit" class="btn btn-primary btn-gradient">Subscribe</button>
           </form>
           <div class="social-links">
-            <a href="#" class="text-white me-3 social-icon">
+            <a href="https://x.com/moses_onyi8290?t=3PhY-BwQPoPsZczv99F0jw&s=09" class="text-white me-3 social-icon">
               <font-awesome-icon :icon="['fab', 'twitter']" size="lg" />
             </a>
-            <a href="#" class="text-white me-3 social-icon">
+            <a href="https://www.facebook.com/profile.php?id=100083101250443" class="text-white me-3 social-icon">
               <font-awesome-icon :icon="['fab', 'facebook-f']" size="lg" />
             </a>
-            <a href="#" class="text-white social-icon">
+            <a href="https://www.instagram.com/mossanga_02?igsh=YzljYTK1ODg3Zg==" class="text-white social-icon">
               <font-awesome-icon :icon="['fab', 'instagram']" size="lg" />
             </a>
           </div>

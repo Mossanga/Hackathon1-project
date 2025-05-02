@@ -1,32 +1,104 @@
+
 <template>
   <div class="container my-5">
-    <h2 class="fw-bold text-success">Contact Us</h2>
-    <p class="fst-italic fw-bold">Have questions or want to advertise with us? Fill out the form below, and we'll get back to you!</p>
-    <form action="https://formspree.io/f/xgvkaopy" method="POST" class="row g-3">
-      <input type="hidden" name="_subject" value="New Contact Form Submission - NewsApp" />
-      <input type="hidden" name="_next" value="http://localhost:5173/contact" />
-      <input type="hidden" name="_url" value="http://localhost:5173/contact" />
-      <input type="hidden" name="_captcha" value="false" />
-      <input type="hidden" name="_autoresponse" value="Thank you for contacting NewsApp! We have received your message and will get back to you soon." />
-      <div class="col-md-6">
+    <h1><font-awesome-icon :icon="['fas', 'envelope']" class="me-2" />Contact Us</h1>
+    <form :action="formAction" method="POST" class="contact-form">
+      <div class="mb-3">
         <label for="name" class="form-label">Name</label>
-        <input type="text" class="form-control" id="name" name="name" required />
+        <input
+          type="text"
+          class="form-control"
+          id="name"
+          name="name"
+          placeholder="Your Name"
+          required
+        />
       </div>
-      <div class="col-md-6">
+      <div class="mb-3">
         <label for="email" class="form-label">Email</label>
-        <input type="email" class="form-control" id="email" name="email" required />
+        <input
+          type="email"
+          class="form-control"
+          id="email"
+          name="email"
+          placeholder="Your Email"
+          required
+        />
       </div>
-      <div class="col-12">
+      <div class="mb-3">
         <label for="message" class="form-label">Message</label>
-        <textarea class="form-control" id="message" name="message" rows="5" required></textarea>
+        <textarea
+          class="form-control"
+          id="message"
+          name="message"
+          rows="5"
+          placeholder="Your Message"
+          required
+        ></textarea>
       </div>
-      <div class="col-12">
-        <button type="submit" class="btn btn-primary">Send Message</button>
-      </div>
+      <input type="hidden" name="_subject" value="New Contact Form Submission" />
+      <input
+        type="hidden"
+        name="_next"
+        value="https://hackathon1-project-git-main-moses-onyilos-projects.vercel.app/thanks"
+      />
+      <input type="text" name="_gotcha" style="display: none;" />
+      <button type="submit" class="btn btn-primary btn-gradient">Send Message</button>
     </form>
   </div>
 </template>
 
 <script setup>
-// No script logic needed
+import { computed } from 'vue';
+
+const formAction = computed(() => 'https://formspree.io/f/xgvkaopy');
 </script>
+
+<style scoped>
+h1 {
+  color: #28A745;
+  font-family: 'Poppins', sans-serif;
+  font-weight: 700;
+}
+.contact-form {
+  max-width: 600px;
+  margin: 0 auto;
+}
+.form-control {
+  border-radius: 10px;
+  padding: 10px;
+  font-size: 0.9rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  transition: box-shadow 0.3s ease;
+}
+.form-control:focus {
+  box-shadow: 0 4px 12px rgba(40, 167, 69, 0.3);
+  border-color: #28A745;
+}
+.form-label {
+  font-weight: 500;
+  color: #333;
+}
+.btn-gradient {
+  background: linear-gradient(45deg, #28A745, #FFC107);
+  border: none;
+  padding: 10px 20px;
+  font-size: 0.9rem;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+.btn-gradient:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 15px rgba(40, 167, 69, 0.4);
+}
+@media (max-width: 576px) {
+  .container {
+    padding: 0 10px;
+  }
+  h1 {
+    font-size: 1.5rem;
+  }
+  .form-control {
+    font-size: 0.85rem;
+  }
+}
+</style>

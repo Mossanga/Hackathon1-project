@@ -1,14 +1,15 @@
+
 <template>
-  <footer class="footer-custom py-5 animate-section">
+  <footer class="footer-custom py-4 animate-section">
     <div class="container">
-      <div class="gradient-divider mb-5"></div>
+      <div class="gradient-divider mb-4"></div>
       <div class="row">
-        <div class="col-md-4 mb-4">
+        <div class="col-12 col-md-4 mb-3">
           <h3 class="mb-3">BM24</h3>
           <p>Your trusted source for breaking news and updates.</p>
           <img :src="bm24Logo" alt="BM24 Logo" class="footer-logo" />
         </div>
-        <div class="col-md-4 mb-4">
+        <div class="col-12 col-md-4 mb-3">
           <h5 class="mb-3">Quick Links</h5>
           <ul class="list-unstyled">
             <li>
@@ -38,10 +39,10 @@
             </li>
           </ul>
         </div>
-        <div class="col-md-4 mb-4">
+        <div class="col-12 col-md-4 mb-3">
           <h5 class="mb-3">Stay Connected</h5>
-          <form class="d-flex mb-3">
-            <input type="email" class="form-control me-2" placeholder="Enter your email" />
+          <form class="d-flex mb-3 flex-column flex-md-row">
+            <input type="email" class="form-control me-md-2 mb-2 mb-md-0" placeholder="Enter your email" />
             <button type="submit" class="btn btn-primary btn-gradient">Subscribe</button>
           </form>
           <div class="social-links">
@@ -57,7 +58,7 @@
           </div>
         </div>
       </div>
-      <div class="text-center mt-4">
+      <div class="text-center mt-3">
         <p class="mb-0">© 2025 BM24. All rights reserved.</p>
       </div>
     </div>
@@ -79,19 +80,21 @@ import bm24Logo from '@/assets/image/BM24.jpg';
   border-radius: 2px;
 }
 .footer-logo {
-  height: 50px;
+  height: 45px;
   width: auto;
   transition: transform 0.3s ease;
 }
 .footer-logo:hover {
   transform: scale(1.1);
 }
-h3, h5 {
-  font-family: 'Poppins', sans-serif;
-  font-weight: 600;
+h3 {
+  font-size: 1.5rem;
+}
+h5 {
+  font-size: 1.1rem;
 }
 p, a {
-  font-family: 'Poppins', sans-serif;
+  font-size: 0.9rem;
 }
 .text-white:hover {
   color: #FFC107 !important;
@@ -105,11 +108,14 @@ p, a {
 }
 .form-control {
   border-radius: 25px;
-  padding: 10px 15px;
+  padding: 8px 12px;
+  font-size: 0.9rem;
 }
 .btn-gradient {
   background: linear-gradient(45deg, #28A745, #FFC107);
   border: none;
+  padding: 8px 15px;
+  font-size: 0.9rem;
 }
 .btn-gradient:hover {
   background: linear-gradient(45deg, #218838, #e0a800);
@@ -125,6 +131,17 @@ p, a {
   to {
     opacity: 1;
     transform: translateY(0);
+  }
+}
+@media (max-width: 768px) {
+  .footer-logo {
+    height: 40px;
+  }
+  h3 {
+    font-size: 1.3rem;
+  }
+  h5 {
+    font-size: 1rem;
   }
 }
 </style>

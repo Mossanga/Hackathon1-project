@@ -10,10 +10,14 @@ export default createStore({
     headlineNews: null,
     selectedNews: null,
     categorizedNews: [],
+    filteredNews: [],
+    error: null,
   },
   mutations: {
     SET_ALL_NEWS(state, news) {
       state.allNews = news;
+      // Initialize filteredNews with all news
+      state.filteredNews = news;
     },
     SET_HEADLINE_NEWS(state, news) {
       state.headlineNews = news;
@@ -23,6 +27,12 @@ export default createStore({
     },
     SET_CATEGORIZED_NEWS(state, news) {
       state.categorizedNews = news;
+    },
+    SET_FILTERED_NEWS(state, news) {
+      state.filteredNews = news;
+    },
+    SET_ERROR(state, error) {
+      state.error = error;
     },
   },
   actions: {
@@ -64,5 +74,7 @@ export default createStore({
     headlineNews: (state) => state.headlineNews,
     selectedNews: (state) => state.selectedNews,
     categorizedNews: (state) => state.categorizedNews,
+    filteredNews: (state) => state.filteredNews,
+    error: (state) => state.error,
   },
 });

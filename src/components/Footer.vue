@@ -1,16 +1,15 @@
-
 <template>
-  <footer class="footer-custom py-4 animate-section">
+  <footer class="footer-custom py-3 animate-section">
     <div class="container">
-      <div class="gradient-divider mb-4"></div>
+      <div class="gradient-divider mb-3"></div>
       <div class="row">
-        <div class="col-12 col-md-4 mb-3">
-          <h3 class="mb-3">BM24</h3>
+        <div class="col-12 col-md-4 mb-2">
+          <h3 class="mb-2">BM24</h3>
           <p>Your trusted source for breaking news and updates.</p>
           <img :src="bm24Logo" alt="BM24 Logo" class="footer-logo" />
         </div>
-        <div class="col-12 col-md-4 mb-3">
-          <h5 class="mb-3">Quick Links</h5>
+        <div class="col-12 col-md-4 mb-2">
+          <h5 class="mb-2">Quick Links</h5>
           <ul class="list-unstyled">
             <li>
               <router-link to="/" class="text-white text-decoration-none">
@@ -39,9 +38,9 @@
             </li>
           </ul>
         </div>
-        <div class="col-12 col-md-4 mb-3">
-          <h5 class="mb-3">Stay Connected</h5>
-          <form class="d-flex mb-3 flex-column flex-md-row">
+        <div class="col-12 col-md-4 mb-2">
+          <h5 class="mb-2">Stay Connected</h5>
+          <form class="d-flex mb-2 flex-column flex-md-row">
             <input type="email" class="form-control me-md-2 mb-2 mb-md-0" placeholder="Enter your email" />
             <button type="submit" class="btn btn-primary btn-gradient">Subscribe</button>
           </form>
@@ -58,7 +57,7 @@
           </div>
         </div>
       </div>
-      <div class="text-center mt-3">
+      <div class="text-center mt-2">
         <p class="mb-0">© 2025 BM24. All rights reserved.</p>
       </div>
     </div>
@@ -75,12 +74,12 @@ import bm24Logo from '@/assets/image/BM24.jpg';
   color: #fff;
 }
 .gradient-divider {
-  height: 4px;
+  height: 3px;
   background: linear-gradient(90deg, #28A745, #FFC107);
   border-radius: 2px;
 }
 .footer-logo {
-  height: 45px;
+  height: 35px;
   width: auto;
   transition: transform 0.3s ease;
 }
@@ -88,13 +87,13 @@ import bm24Logo from '@/assets/image/BM24.jpg';
   transform: scale(1.1);
 }
 h3 {
-  font-size: 1.5rem;
+  font-size: 1.3rem;
 }
 h5 {
-  font-size: 1.1rem;
+  font-size: 1rem;
 }
 p, a {
-  font-size: 0.9rem;
+  font-size: 0.85rem;
 }
 .text-white:hover {
   color: #FFC107 !important;
@@ -107,15 +106,15 @@ p, a {
   transform: scale(1.3);
 }
 .form-control {
-  border-radius: 25px;
-  padding: 8px 12px;
-  font-size: 0.9rem;
+  border-radius: 20px;
+  padding: 6px 10px;
+  font-size: 0.85rem;
 }
 .btn-gradient {
   background: linear-gradient(45deg, #28A745, #FFC107);
   border: none;
-  padding: 8px 15px;
-  font-size: 0.9rem;
+  padding: 6px 12px;
+  font-size: 0.85rem;
 }
 .btn-gradient:hover {
   background: linear-gradient(45deg, #218838, #e0a800);
@@ -135,13 +134,16 @@ p, a {
 }
 @media (max-width: 768px) {
   .footer-logo {
-    height: 40px;
+    height: 30px;
   }
   h3 {
-    font-size: 1.3rem;
+    font-size: 1.2rem;
   }
   h5 {
-    font-size: 1rem;
+    font-size: 0.9rem;
+  }
+  .form-control, .btn-gradient {
+    font-size: 0.8rem;
   }
 }
 </style>

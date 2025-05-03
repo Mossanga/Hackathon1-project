@@ -1,5 +1,4 @@
-
- <template>
+<template>
   <nav class="navbar navbar-expand-lg navbar-dark navbar-custom sticky-top">
     <div class="container-fluid px-3">
       <router-link class="navbar-brand" to="/">
@@ -14,6 +13,7 @@
         aria-controls="navbarNav"
         aria-expanded="false"
         aria-label="Toggle navigation"
+        @click="toggleNavbar"
       >
         <span class="navbar-toggler-icon"></span>
       </button>
@@ -47,7 +47,7 @@
         </ul>
         <form @submit.prevent="filterNews" class="d-flex align-items-center search-form">
           <div class="input-group">
-            <span class="input-group-text bg-white border-0">
+            <span class="input-group-text bg-white border-0" @click="filterNews" style="cursor: pointer;">
               <font-awesome-icon :icon="['fas', 'search']" />
             </span>
             <input
@@ -59,7 +59,7 @@
             />
           </div>
           <button type="button" class="btn btn-secondary btn-gradient ms-2" @click="clearSearch">
-            <font-awesome-icon :icon="['fas', 'times']" />Clear
+            <font-awesome-icon :icon="['fas', 'times']" /> Clear
           </button>
         </form>
       </div>
@@ -71,74 +71,56 @@
 import { ref, computed } from 'vue';
 import { useStore } from 'vuex';
 import { useRouter } from 'vue-router';
-import bm24Logo from '@/assets/image/BM24.jpg';
 
-// Vuex store and router
 const store = useStore();
 const router = useRouter();
-
-// Reactive state
 const searchQuery = ref('');
 
-// Computed properties
 const allNews = computed(() => store.getters.allNews || []);
 
-// Placeholder news for fallback
 const placeholderNews = [
-  {
-    uuid: '1',
-    title: 'Sample News 1',
-    description: 'This is a sample news article for testing.',
-    image_url: 'https://via.placeholder.com/800x400/28A745/FFFFFF?text=Sample+News+1',
-  },
-  {
-    uuid: '2',
-    title: 'Sample News 2',
-    description: 'Another sample news article for testing search.',
-    image_url: 'https://via.placeholder.com/800x400/28A745/FFFFFF?text=Sample+News+2',
-  },
-  {
-    uuid: '3',
-    title: 'Sample News 3',
-    description: 'Testing the search functionality with this article.',
-    image_url: 'https://via.placeholder.com/800x400/28A745/FFFFFF?text=Sample+News+3',
-  },
+  { uuid: '1', title: 'Sample News 1', description: 'This is a sample news article for testing.', image_url: 'https://via.placeholder.com/800x400/28A745/FFFFFF?text=Sample+News+1' },
+  { uuid: '2', title: 'Sample News 2', description: 'Another sample news article for testing search.', image_url: 'https://via.placeholder.com/800x400/28A745/FFFFFF?text=Sample+News+2' },
+  { uuid: '3', title: 'Sample News 3', description: 'Testing the search functionality with this article.', image_url: 'https://via.placeholder.com/800x400/28A745/FFFFFF?text=Sample+News+3' },
 ];
 
-// Filter news function
 const filterNews = () => {
-  try {
-    console.log('Search triggered with query:', searchQuery.value); // Debug
-    const query = searchQuery.value.trim().toLowerCase();
-    const newsSource = allNews.value && allNews.value.length > 0 ? allNews.value : placeholderNews;
-    let filtered = newsSource;
-    if (query) {
-      filtered = newsSource.filter((news) => {
-        const title = news.title ? String(news.title).toLowerCase() : '';
-        const description = news.description ? String(news.description).toLowerCase() : '';
+  console.log('filterNews triggered with query:', searchQuery.value);
+  const query = searchQuery.value.trim().toLowerCase();
+  const newsSource = allNews.value.length > 0 ? allNews.value : placeholderNews;
+  console.log('News source:', newsSource);
+  const filtered = query
+    ? newsSource.filter(news => {
+        const title = news.title?.toLowerCase() || '';
+        const description = news.description?.toLowerCase() || '';
         const matches = title.includes(query) || description.includes(query);
-        console.log(`News "${title}" matches "${query}":`, matches); // Debug
+        console.log(`Checking news "${title}" for query "${query}":`, matches);
         return matches;
-      });
-    }
-    console.log('Filtered news:', filtered); // Debug
-    store.commit('SET_FILTERED_NEWS', filtered);
-    // Redirect to home if not already there
-    if (router.currentRoute.value.path !== '/') {
-      router.push('/');
-    }
-  } catch (error) {
-    console.error('Error filtering news:', error);
-    store.commit('SET_FILTERED_NEWS', []);
+      })
+    : newsSource;
+  console.log('Filtered news:', filtered);
+  store.commit('SET_FILTERED_NEWS', filtered);
+  if (router.currentRoute.value.path !== '/') {
+    console.log('Redirecting to home');
+    router.push('/');
   }
 };
 
-// Clear search function
 const clearSearch = () => {
   searchQuery.value = '';
-  const newsSource = allNews.value && allNews.value.length > 0 ? allNews.value : placeholderNews;
+  const newsSource = allNews.value.length > 0 ? allNews.value : placeholderNews;
+  console.log('Clearing search, resetting to:', newsSource);
   store.commit('SET_FILTERED_NEWS', newsSource);
-  console.log('Search cleared, showing all news:', newsSource); // Debug
+};
+
+const toggleNavbar = () => {
+  console.log('Toggling navbar');
+  const navbar = document.getElementById('navbarNav');
+  if (navbar.classList.contains('show')) {
+    navbar.classList.remove('show');
+  } else {
+    navbar.classList.add('show');
+  }
 };
 </script>
 
@@ -146,14 +128,12 @@ const clearSearch = () => {
 .navbar-custom {
   background: rgba(0, 0, 0, 0.85);
   backdrop-filter: blur(5px);
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
 }
 .navbar-logo {
   height: 45px;
   width: 45px;
   border-radius: 50%;
   margin-right: 10px;
-  transition: transform 0.3s ease;
 }
 .navbar-logo:hover {
   transform: scale(1.1);
@@ -163,19 +143,15 @@ const clearSearch = () => {
   font-weight: 500;
   padding: 8px 12px;
   font-size: 0.9rem;
-  transition: color 0.3s ease, transform 0.3s ease;
 }
 .nav-link:hover {
   color: #FFC107 !important;
-  transform: translateY(-2px);
 }
 .nav-icon {
   color: #28A745;
-  transition: color 0.3s ease, transform 0.3s ease;
 }
 .nav-link:hover .nav-icon {
   color: #FFC107;
-  transform: scale(1.2);
 }
 .search-form {
   max-width: 300px;
@@ -190,34 +166,22 @@ const clearSearch = () => {
   border-radius: 0 25px 25px 0;
   padding: 6px 12px;
   font-size: 0.85rem;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-  transition: box-shadow 0.3s ease, border-color 0.3s ease;
 }
 .search-bar:focus {
-  box-shadow: 0 4px 12px rgba(40, 167, 69, 0.3);
   border-color: #28A745;
 }
 .btn-gradient {
   background: linear-gradient(45deg, #28A745, #FFC107);
   border: none;
   padding: 6px 10px;
-  font-size: 0.85rem;
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 .btn-gradient:hover {
   transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(40, 167, 69, 0.4);
 }
 @media (max-width: 992px) {
   .search-form {
     max-width: 250px;
-  }
-  .search-bar {
-    padding: 5px 10px;
-    font-size: 0.8rem;
-  }
-  .btn-gradient {
-    padding: 5px 8px;
+    margin-top: 10px;
   }
 }
 @media (max-width: 768px) {
@@ -225,13 +189,9 @@ const clearSearch = () => {
     height: 35px;
     width: 35px;
   }
-  .nav-link {
-    padding: 6px 10px;
-    font-size: 0.85rem;
-  }
   .search-form {
-    margin-top: 10px;
     max-width: 100%;
+    padding: 0 15px;
   }
 }
 @media (max-width: 576px) {
@@ -242,9 +202,6 @@ const clearSearch = () => {
   .navbar-logo {
     height: 30px;
     width: 30px;
-  }
-  .search-bar {
-    font-size: 0.75rem;
   }
 }
 </style>

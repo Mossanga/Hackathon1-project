@@ -14,7 +14,7 @@ import "bootstrap/dist/js/bootstrap.bundle.min.js"
 import { library } from '@fortawesome/fontawesome-svg-core';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 import { faHome, faInfoCircle, faEnvelope, faBriefcase, faLaptopCode, faSearch } from '@fortawesome/free-solid-svg-icons';
-import { faTwitter, faFacebookF, faInstagram } from '@fortawesome/free-brands-svg-icons';
+import { faTwitter, faFacebookF, faInstagram, faArrowUp } from '@fortawesome/free-brands-svg-icons';
 
 // Add icons to the library
 library.add(faHome, faInfoCircle, faEnvelope, faBriefcase, faLaptopCode, faSearch, faTwitter, faFacebookF, faInstagram);

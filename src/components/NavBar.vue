@@ -1,5 +1,4 @@
-
- <template>
+<template>
   <nav class="navbar navbar-expand-lg navbar-dark navbar-custom sticky-top">
     <div class="container-fluid px-3">
       <router-link class="navbar-brand" to="/">
@@ -14,6 +13,7 @@
         aria-controls="navbarNav"
         aria-expanded="false"
         aria-label="Toggle navigation"
+        @click="toggleNavbar"
       >
         <span class="navbar-toggler-icon"></span>
       </button>
@@ -47,7 +47,7 @@
         </ul>
         <form @submit.prevent="filterNews" class="d-flex align-items-center search-form">
           <div class="input-group">
-            <span class="input-group-text bg-white border-0">
+            <span class="input-group-text bg-white border-0" @click="filterNews" style="cursor: pointer;">
               <font-awesome-icon :icon="['fas', 'search']" />
             </span>
             <input
@@ -68,77 +68,61 @@
 </template>
 
 <script setup>
-import { ref, computed } from 'vue';
+import { ref, computed, nextTick } from 'vue';
 import { useStore } from 'vuex';
 import { useRouter } from 'vue-router';
-import bm24Logo from '@/assets/image/BM24.jpg';
 
-// Vuex store and router
 const store = useStore();
 const router = useRouter();
-
-// Reactive state
 const searchQuery = ref('');
 
-// Computed properties
 const allNews = computed(() => store.getters.allNews || []);
 
-// Placeholder news for fallback
 const placeholderNews = [
-  {
-    uuid: '1',
-    title: 'Sample News 1',
-    description: 'This is a sample news article for testing.',
-    image_url: 'https://via.placeholder.com/800x400/28A745/FFFFFF?text=Sample+News+1',
-  },
-  {
-    uuid: '2',
-    title: 'Sample News 2',
-    description: 'Another sample news article for testing search.',
-    image_url: 'https://via.placeholder.com/800x400/28A745/FFFFFF?text=Sample+News+2',
-  },
-  {
-    uuid: '3',
-    title: 'Sample News 3',
-    description: 'Testing the search functionality with this article.',
-    image_url: 'https://via.placeholder.com/800x400/28A745/FFFFFF?text=Sample+News+3',
-  },
+  { uuid: '1', title: 'Sample News 1', description: 'This is a sample news article for testing.', image_url: 'https://via.placeholder.com/800x400/28A745/FFFFFF?text=Sample+News+1' },
+  { uuid: '2', title: 'Sample News 2', description: 'Another sample news article for testing search.', image_url: 'https://via.placeholder.com/800x400/28A745/FFFFFF?text=Sample+News+2' },
+  { uuid: '3', title: 'Sample News 3', description: 'Testing the search functionality with this article.', image_url: 'https://via.placeholder.com/800x400/28A745/FFFFFF?text=Sample+News+3' },
 ];
 
-// Filter news function
-const filterNews = () => {
-  try {
-    console.log('Search triggered with query:', searchQuery.value); // Debug
-    const query = searchQuery.value.trim().toLowerCase();
-    const newsSource = allNews.value && allNews.value.length > 0 ? allNews.value : placeholderNews;
-    let filtered = newsSource;
-    if (query) {
-      filtered = newsSource.filter((news) => {
-        const title = news.title ? String(news.title).toLowerCase() : '';
-        const description = news.description ? String(news.description).toLowerCase() : '';
+const filterNews = async () => {
+  console.log('filterNews triggered with query:', searchQuery.value);
+  const query = searchQuery.value.trim().toLowerCase();
+  const newsSource = allNews.value.length > 0 ? allNews.value : placeholderNews;
+  console.log('News source:', newsSource);
+  const filtered = query
+    ? newsSource.filter(news => {
+        const title = news.title?.toLowerCase() || '';
+        const description = news.description?.toLowerCase() || '';
         const matches = title.includes(query) || description.includes(query);
-        console.log(`News "${title}" matches "${query}":`, matches); // Debug
+        console.log(`Checking news "${title}" for query "${query}":`, matches);
         return matches;
-      });
-    }
-    console.log('Filtered news:', filtered); // Debug
-    store.commit('SET_FILTERED_NEWS', filtered);
-    // Redirect to home if not already there
-    if (router.currentRoute.value.path !== '/') {
-      router.push('/');
-    }
-  } catch (error) {
-    console.error('Error filtering news:', error);
-    store.commit('SET_FILTERED_NEWS', []);
+      })
+    : newsSource;
+  console.log('Filtered news:', filtered);
+  store.commit('SET_FILTERED_NEWS', filtered);
+  console.log('Vuex filteredNews after commit:', store.state.filteredNews);
+  if (router.currentRoute.value.path !== '/') {
+    console.log('Redirecting to home');
+    await nextTick();
+    router.push('/');
   }
 };
 
-// Clear search function
 const clearSearch = () => {
   searchQuery.value = '';
-  const newsSource = allNews.value && allNews.value.length > 0 ? allNews.value : placeholderNews;
+  const newsSource = allNews.value.length > 0 ? allNews.value : placeholderNews;
+  console.log('Clearing search, resetting to:', newsSource);
   store.commit('SET_FILTERED_NEWS', newsSource);
-  console.log('Search cleared, showing all news:', newsSource); // Debug
+};
+
+const toggleNavbar = () => {
+  console.log('Toggling navbar');
+  const navbar = document.getElementById('navbarNav');
+  if (navbar.classList.contains('show')) {
+    navbar.classList.remove('show');
+  } else {
+    navbar.classList.add('show');
+  }
 };
 </script>
 

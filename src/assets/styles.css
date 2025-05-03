@@ -10,9 +10,11 @@ body {
   min-height: 100vh;
   margin: 0;
 }
-a {
+
+a:not(.nav-link) {
   transition: color 0.3s ease, transform 0.3s ease;
 }
-a:hover {
+
+a:not(.nav-link):hover {
   color: var(--secondary-color) !important;
 }
